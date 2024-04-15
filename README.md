@@ -1,4 +1,4 @@
-# Bhakti
+# Bhakti 🐕
 
 [Bhakti](https://finalfantasy.fandom.com/wiki/Bhakti) is a conglomeration of analysis tools to look at certain types of machine learning models for the presence of a code execution layer. There are three main components:
 
@@ -14,18 +14,21 @@ This little repo is scrappy tooling that resulted from a threat hunt that the Dr
 
 [Analysis Scripts](analysis/)
 - `checkModel.py` is designed to assess either a local model or a huggingface repo for a lambda layer. It supports `.h5` and `keras_metadata.pb` formats; it attempts to dump any code found within any identified layers in these kinds of files. 
+-`monitoring_ec2_check.py` is designed to run as part of huggingface monitoring hosted on AWS; it's deployed with the monitoring cdk stack. It does a bunch of updating of dynamo, pulling work to do from sqs, etc. 
 
 ## YARA rules
 [YARA Rules](yara/)
-- `keras-requests.yara` flags on any model using the requests library
+- `keras-lambda.yara` flags on any Tensorflow Keras model containing a lambda layer
+- `keras-requests.yara` flags on any Tensorflow Keras model using the requests library in a lambda layer
+- `keras-subprocess.yara` flags on any Tensorflow Keras model using the subprocess library in a lambda layer
 
 ## CDK Stuff
 [CDK Things](bhakti-cdk/)
 
 Parameterizing CDK and making it beautiful and portable is not really my forte, but I've done my best. There's a whole additional [README.md](bhakti-cdk/README.md) file in the cdk sub-folder with more information about standing up this infrastructure in your own account. **AWS isn't free**, please configure your account with appropriate billing alarms so you're not taken aback by anything these stacks might do trying to be a good little robots. 
 
-- `$monitoring_stack` will attempt to deploy a monitoring solution in a bootstrapped AWS account. 
-- `$analysis_stack` will attempt to stand-up an ec2 launch template in a bootstrapped AWS account to use for ML malware analysis
+- [$monitoring_stack](bhakti-cdk/bhakti_cdk/bhakti_monitoring_stack.py) will attempt to deploy a monitoring solution in a bootstrapped AWS account. 
+- [$launch_template_stack](bhakti-cdk/bhakti_cdk/bhakti_instance_profiles.py) will attempt to stand-up an ec2 launch template in a bootstrapped AWS account to use for ML malware analysis
 
 ## License
 
