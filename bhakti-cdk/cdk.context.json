@@ -1,0 +1,6 @@
+{
+  "deploy_type": "monitoring",
+  "deploy_region": "us-west-2",
+  "deploy_account": 123456789,
+  "sg_id": "sg-example"
+}
